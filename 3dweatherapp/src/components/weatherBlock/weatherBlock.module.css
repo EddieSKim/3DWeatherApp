@@ -1,5 +1,33 @@
 .container {
     width: 80%;
     height: 200px;
-    background-color: grey;
+    border: 2px solid black
+}
+
+.weatherWrapper{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+.currWeatherWrapper {
+    display: grid;
+    grid-template-columns: 0.5fr 1.5fr;
+}
+
+.currInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.weekReport {
+
+}
+
+.currTemp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
 }
