@@ -1,43 +1,67 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import styles from "./weatherForm.module.css";
 import { Link } from "react-router-dom";
 import WeatherBlock from "../../components/weatherBlock/weatherBlock";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-
-// https://api.openweathermap.org/data/2.5/weather
-// https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-// Good for using location service to find lat and long
-// https://api.openweathermap.org/data/2.5/weather?q={searchQuery}&units=metric&APPID
-// Good for searching
-/* calgary default lat long = { 51.0447° N, 114.0719° W } */
+const tempWeather = [
+    {
+        temp: 10,
+        speed: 20,
+    },
+    {
+        temp: 12,
+        speed: 20,
+    },
+    {
+        temp: 14,
+        speed: 20,
+    },
+    {
+        temp: 1,
+        speed: 20,
+    },
+]
 
 function WeatherForm() {
 
     const [searchQuery, setSearchQuery] = useState("");
-    const [weather, setWeather] = useState({});
+    const [weatherList, updateWeatherList] = useState([]);
+    const [weatherInfo, setWeatherInfo] = useState({});
     const key = process.env.REACT_APP_API_KEY;
 
     useEffect(() => {
         // fetch(`https://api.openweathermap.org/data/2.5/weather?q=Calgary&units=metric&APPID=${key}`)
-        //   .then(res => res.json())
-        //   .then(result => {
-        //     setWeather(result);
-        //     setSearchQuery("");
-        //   })
-
-        // fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=51.0447&lon=114.0719&exclude=minutely,hourly&appid=${key}`)
         //     .then(res => res.json())
-        //     .then(data => {
-        //         setWeather(data);
-        //     });
-        console.log(weather);
-    }, [key, weather]);
+        //     .then(result => {
+        //         setWeather(result);
+        //         setSearchQuery("");
+        //     })
+
+        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=51.0447&lon=-114.0719&exclude=minutely,hourly&units=metric&appid=${key}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.data)
+                setWeatherInfo(data)
+                updateWeatherList([data])
+            })
+            .catch(err => console.error(err));
+    }, []);
 
     const searchChange = (event) => {
         setSearchQuery(event.target.value);
+    }
+
+    const handleDragEnd = (result) => {
+        if (!result.destination) return;
+
+        const items = Array.from(weatherList);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        updateWeatherList(items);
     }
 
     return (
@@ -52,7 +76,33 @@ function WeatherForm() {
                             <SearchIcon />
                         </InputAdornment>
                 }} /> */}
-            <WeatherBlock />
+            <Button>Collapse All</Button>
+            <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="droppable">
+                    {(provided) => (
+                        <div
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                        >
+                            {weatherList.map((item, index) => (
+                                <Draggable key={item.lat} draggableId={item.lat.toString()} index={index}>
+                                    {(provided) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                        >
+                                            {item.temp}
+                                            <WeatherBlock />
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
             <Button>
                 <Link to="/NewLocation">
                     Add New Location

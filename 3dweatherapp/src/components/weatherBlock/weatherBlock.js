@@ -15,13 +15,16 @@ function WeatherBlock(props) {
                     </div>
                     <div className={styles.currInfo}>
                         <span>humidity</span>
-                        <span>Pressue(convert to khPa)</span>
+                        <span>Pressure(convert to khPa)</span>
                         <span>wind speed</span>
                         <span>feels like</span>
                     </div>
                 </div>
                 <div className={styles.weekReport}>
-                    Weekly weather
+                    <div>
+                        <WbSunnyIcon />
+                        <p>Temperature</p>
+                    </div>
                 </div>
             </div>
         </div>
