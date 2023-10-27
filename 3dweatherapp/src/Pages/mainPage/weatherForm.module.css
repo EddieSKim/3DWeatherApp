@@ -1,10 +1,112 @@
-.container {
+.header {
+    width: 100vw;
+    height: 10vh;
+}
+
+.contentContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.navBarContainer {
+    flex: 10 0 0;
+    width: 10vw;
+    height: 90vh;
+}
+
+.navWrapper {
+    background-color: black;
+    width: 10vw;
+    height: 80vh;
+}
+
+.mainLocationContainer {
+    flex: 60 0 0;
+    width: 60vw;
+    height: 40vh;
+}
+
+.currentWeather {
     display: flex;
     flex-direction: column;
+    background-color: rgb(87, 126, 83);
+    width: 60vw;
+    height: 40vh;
+    align-items: center;
+    justify-content: space-evenly;
+    
+}
+
+.currentWeatherWrapper {
+    background-color: grey;
+    border-radius: 20px;
+    width: 96%;
+    height: 80%;
+}
+
+.weatherInfo {
+    display: flex;
+    background-color: red;
+    width: 60vw;
+    height: 20vh;
     align-items: center;
     justify-content: center;
 }
 
-.weatherList {
-    list-style-type: none;
+.weatherInfoWrapper {
+    background-color: grey;
+    border-radius: 20px;
+    width: 96%;
+    height: 90%;
+}
+
+.hourlyWeatherContainer {
+    display: flex;
+    background-color: blue;
+    width: 60vw;
+    height: 20vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.hourlyWeatherWrapper {
+    background-color: grey;
+    border-radius: 20px;
+    width: 96%;
+    height: 90%;
+}
+
+.weeklyWeatherContainer {
+    display: flex;
+    background-color: aquamarine;
+    flex: 30 0 0;
+    width: 30vw;
+    height: 80vh;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.weeklyWeatherWrapper {
+    background-color: blueviolet;
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    height: 90%;
+    border-radius: 20px;
+    margin-bottom: 1vh;
+}
+
+.searchLocation {
+    width: 80%;
+}
+
+.locationTitle {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+.subTitle {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    text-transform: uppercase;
 }
