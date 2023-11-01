@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography, Skeleton } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import styles from "./weatherForm.module.css";
-import { Link } from "react-router-dom";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import WeeklyWeatherItem from "../../components/weeklyWeatherItem/weeklyWeatherItem";
+// import { Link } from "react-router-dom";
+// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import AirIcon from '@mui/icons-material/Air';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
+import OpacityIcon from '@mui/icons-material/Opacity';
+
 
 function WeatherForm() {
 
@@ -12,27 +21,34 @@ function WeatherForm() {
     const [searchQuery, setSearchQuery] = useState("");
     const [weatherList, updateWeatherList] = useState([]);
     const [weatherInfo, setWeatherInfo] = useState({});
-    const [locationName, setLocationName] = useState("");
+    const [location, setLocation] = useState("");
+    const [locationDateTime, setLocationDateTime] = useState("");
     const key = process.env.REACT_APP_API_KEY;
 
     useEffect(() => {
         setIsLoading(true);
+        // fetch the weather info of location
         fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=51.0447&lon=-114.0719&exclude=minutely,hourly&units=metric&appid=${key}`)
             .then(res => res.json())
             .then(data => {
-                data.daily.shift();
-                fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${data.lat}&lon=${data.lon}&limit=5&appid=${key}`)
+                // Fetch the location name 
+                fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${data.lat}&lon=${data.lon}&limit=1&appid=${key}`)
                     .then(res => res.json())
                     .then(data => {
-                        setLocationName(data[0].name);
+                        setLocation(data[0]);
                     })
                     .catch(err => console.error(err))
                 setWeatherInfo(data);
                 updateWeatherList([data]);
+                setLocationDateTime(convertEpochToDateTime(data.current.dt));
                 setIsLoading(false);
             })
             .catch(err => console.error(err));
     }, []);
+
+    const convertEpochToDateTime = (epoch) => {
+        return new Date(epoch * 1000);
+    }
 
     const searchChange = (event) => {
         setSearchQuery(event.target.value);
@@ -98,7 +114,7 @@ function WeatherForm() {
                     </div>
                 </div>
                 <div className={styles.mainLocationContainer}>
-                    <div className={styles.currentWeather}>
+                    <div className={styles.currentWeatherContainer}>
                         <TextField
                             className={styles.searchLocation}
                             onChange={searchChange}
@@ -112,16 +128,35 @@ function WeatherForm() {
                         <div className={styles.currentWeatherWrapper}>
                             {
                                 !isLoading ? (
-                                    <div>
+                                    <>
                                         <h1 className={styles.locationTitle}>
-                                            {locationName}
+                                            {location.name}
+                                            <span className={styles.locationCountry}>
+                                                {location.country}
+                                            </span>
                                         </h1>
-                                        {/* <span>Current Temp: {weatherInfo && weatherInfo.current.temp}</span>
-                                        <span>Feels like: {weatherInfo && weatherInfo.current.feels_like}</span> */}
-                                    </div>
+                                        <span className={styles.locationDate}>LOCAL DATE: {locationDateTime.toDateString()}</span>
+                                        <span id={styles.currentTemp}>
+                                            {Math.round(weatherInfo && weatherInfo.current.temp)}&deg;C
+                                        </span>
+                                        <span id={styles.feelsLike}>
+                                            Feels like: {Math.round(weatherInfo && weatherInfo.current.feels_like)}&deg;C
+                                        </span>
+                                    </>
                                 ) : (
-                                    <div>
-                                        Loading
+                                    <div className={styles.currentWeatherWrapper}>
+                                        <div className={styles.locationTitle}>
+                                            <Skeleton width={200} height={100} />
+                                        </div>
+                                        <div className={styles.locationDate}>
+                                            <Skeleton width={220} height={30} />
+                                        </div>
+                                        <div id={styles.currentTemp}>
+                                            <Skeleton width={130} height={130} />
+                                        </div>
+                                        <div id={styles.feelsLike}>
+                                            <Skeleton width={150} height={30} />
+                                        </div>
                                     </div>
                                 )
                             }
@@ -129,15 +164,90 @@ function WeatherForm() {
                     </div>
                     <div className={styles.weatherInfo}>
                         <div className={styles.weatherInfoWrapper}>
-                            <span>Air Conditions</span>
                             {
                                 !isLoading ? (
-                                    <div>
-                                        <span>Humidity:</span>
-                                    </div>
+                                    <>
+                                        <h3 className={styles.subTitle}>
+                                            Air Conditions
+                                        </h3>
+                                        <div className={styles.informationContainer}>
+                                            <div>
+                                                <div className={styles.infoTitle}>
+                                                    <OpacityIcon />
+                                                    <span>Humidity</span>
+                                                </div>
+                                                <span>{weatherInfo.current.humidity}%</span>
+                                            </div>
+                                            <div>
+                                                <div className={styles.infoTitle}>
+                                                    <AirIcon />
+                                                    <span>Wind Speed</span>
+                                                </div>
+                                                <span>{weatherInfo.current.wind_speed}m/s</span>
+                                            </div>
+                                            <div>
+                                                <div className={styles.infoTitle}>
+                                                    <WbSunnyIcon />
+                                                    <span>UV Index</span>
+                                                </div>
+
+                                                <span>{weatherInfo.current.uvi}%</span>
+                                            </div>
+                                            <div>
+                                                <div className={styles.infoTitle}>
+                                                    <Brightness4Icon />
+                                                    <span>Sunrise/Sunset</span>
+                                                </div>
+                                                <span>
+                                                    {convertEpochToDateTime(weatherInfo.current.sunrise).getHours()}:
+                                                    {convertEpochToDateTime(weatherInfo.current.sunrise).getMinutes()}
+                                                    /
+                                                    {convertEpochToDateTime(weatherInfo.current.sunset).getHours()}:
+                                                    {convertEpochToDateTime(weatherInfo.current.sunset).getMinutes()}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <div className={styles.infoTitle}>
+                                                    <AvTimerIcon />
+                                                    <span>Pressure</span>
+                                                </div>
+                                                <span>{weatherInfo.current.pressure / 1000}khPa</span>
+                                            </div>
+                                            <div>
+                                                <span className={styles.infoTitle}>
+                                                    Precipitation
+                                                </span>
+                                                <div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
                                 ) : (
-                                    <div>
-                                        Loading
+                                    <div className={styles.weatherInfoWrapper}>
+                                        <h3 className={styles.subTitle}>
+                                            <Skeleton animation="wave" width={150} height={30} />
+                                        </h3>
+                                        <div className={styles.informationContainer}>
+                                            <div>
+                                                <Skeleton animation="wave" width={120} height={90} />
+                                            </div>
+                                            <div>
+                                                <Skeleton animation="wave" width={120} height={90} />
+                                            </div>
+                                            <div>
+                                                <Skeleton animation="wave" width={120} height={90} />
+                                            </div>
+                                            <div>
+                                                <Skeleton animation="wave" width={120} height={90} />
+                                            </div>
+                                            <div>
+                                                <Skeleton animation="wave" width={120} height={90} />
+                                            </div>
+                                            <div>
+                                                <Skeleton animation="wave" width={120} height={90} />
+                                            </div>
+                                        </div>
                                     </div>
                                 )
                             }
@@ -145,15 +255,19 @@ function WeatherForm() {
                     </div>
                     <div className={styles.hourlyWeatherContainer}>
                         <div className={styles.hourlyWeatherWrapper}>
-                            <span>Hourly Forecast</span>
                             {
                                 !isLoading ? (
                                     <div>
+                                        <h3 className={styles.subTitle}>
+                                            Hourly Forecast
+                                        </h3>
+                                        <div>
 
+                                        </div>
                                     </div>
                                 ) : (
                                     <div>
-                                        Loading
+                                        <Skeleton variant="rounded" animation="wave" width={210} height={60} />
                                     </div>
                                 )
                             }
@@ -161,20 +275,37 @@ function WeatherForm() {
                     </div>
                 </div>
                 <div className={styles.weeklyWeatherContainer}>
-                    <div className={styles.weeklyWeatherWrapper}>
-                        <span>7-Day Forecast</span>
-                        {
-                            !isLoading ? (
-                                <div>
-
+                    {
+                        !isLoading ? (
+                            <div className={styles.weeklyWeatherWrapper}>
+                                <h3 className={styles.weekTitle}>7-Day Forecast</h3>
+                                <div className={styles.weeklyList}>
+                                    {
+                                        weatherInfo.daily.map((item, index) => (
+                                            <WeeklyWeatherItem
+                                                key={index}
+                                                weather={item} />
+                                        ))
+                                    }
                                 </div>
-                            ) : (
-                                <div>
-                                    Loading
+                            </div>
+                        ) : (
+                            <div className={styles.weeklyWeatherWrapper}>
+                                <div className={styles.weekTitle}>
+                                    <Skeleton variant="rounded" animation="wave" width={200} height={30} />
                                 </div>
-                            )
-                        }
-                    </div>
+                                <div className={styles.loaderWrapper}>
+                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                </div>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
         </div>
