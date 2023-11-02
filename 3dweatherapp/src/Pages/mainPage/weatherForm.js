@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, TextField, Typography, Skeleton } from "@mui/material";
+import { TextField, Skeleton } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import styles from "./weatherForm.module.css";
 import WeeklyWeatherItem from "../../components/weeklyWeatherItem/weeklyWeatherItem";
+import HourlyWeatherItem from "../../components/hourlyWeatherItem/hourlyWeatherItem";
 // import { Link } from "react-router-dom";
 // import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AirIcon from '@mui/icons-material/Air';
@@ -28,7 +29,7 @@ function WeatherForm() {
     useEffect(() => {
         setIsLoading(true);
         // fetch the weather info of location
-        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=51.0447&lon=-114.0719&exclude=minutely,hourly&units=metric&appid=${key}`)
+        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=51.0447&lon=-114.0719&exclude=minutely&units=metric&appid=${key}`)
             .then(res => res.json())
             .then(data => {
                 // Fetch the location name 
@@ -135,7 +136,7 @@ function WeatherForm() {
                                                 {location.country}
                                             </span>
                                         </h1>
-                                        <span className={styles.locationDate}>LOCAL DATE: {locationDateTime.toDateString()}</span>
+                                        <span className={styles.locationDate}>{locationDateTime.toDateString()}</span>
                                         <span id={styles.currentTemp}>
                                             {Math.round(weatherInfo && weatherInfo.current.temp)}&deg;C
                                         </span>
@@ -168,7 +169,7 @@ function WeatherForm() {
                                 !isLoading ? (
                                     <>
                                         <h3 className={styles.subTitle}>
-                                            Air Conditions
+                                            Weather Conditions
                                         </h3>
                                         <div className={styles.informationContainer}>
                                             <div>
@@ -176,29 +177,34 @@ function WeatherForm() {
                                                     <OpacityIcon />
                                                     <span>Humidity</span>
                                                 </div>
-                                                <span>{weatherInfo.current.humidity}%</span>
+                                                <span className={styles.infoText}>
+                                                    {weatherInfo.current.humidity}%
+                                                    </span>
                                             </div>
                                             <div>
                                                 <div className={styles.infoTitle}>
                                                     <AirIcon />
                                                     <span>Wind Speed</span>
                                                 </div>
-                                                <span>{weatherInfo.current.wind_speed}m/s</span>
+                                                <span className={styles.infoText}>
+                                                    {weatherInfo.current.wind_speed}m/s
+                                                    </span>
                                             </div>
                                             <div>
                                                 <div className={styles.infoTitle}>
                                                     <WbSunnyIcon />
                                                     <span>UV Index</span>
                                                 </div>
-
-                                                <span>{weatherInfo.current.uvi}%</span>
+                                                <span className={styles.infoText}>
+                                                    {weatherInfo.current.uvi}%
+                                                    </span>
                                             </div>
                                             <div>
                                                 <div className={styles.infoTitle}>
                                                     <Brightness4Icon />
                                                     <span>Sunrise/Sunset</span>
                                                 </div>
-                                                <span>
+                                                <span className={styles.infoText}>
                                                     {convertEpochToDateTime(weatherInfo.current.sunrise).getHours()}:
                                                     {convertEpochToDateTime(weatherInfo.current.sunrise).getMinutes()}
                                                     /
@@ -211,14 +217,38 @@ function WeatherForm() {
                                                     <AvTimerIcon />
                                                     <span>Pressure</span>
                                                 </div>
-                                                <span>{weatherInfo.current.pressure / 1000}khPa</span>
+                                                <span className={styles.infoText}>
+                                                    {weatherInfo.current.pressure / 1000}khPa
+                                                    </span>
                                             </div>
                                             <div>
                                                 <span className={styles.infoTitle}>
                                                     Precipitation
                                                 </span>
                                                 <div>
-
+                                                    {
+                                                        weatherInfo.current.rain || weatherInfo.current.snow ? (
+                                                            <>
+                                                                {
+                                                                    weatherInfo.current.rain ? (
+                                                                        <div className={styles.infoText}>
+                                                                            <WaterDropIcon />
+                                                                            <span>{weatherInfo.current.rain["1h"]} mm/h</span>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className={styles.infoText}>
+                                                                            <AcUnitIcon />
+                                                                            <span>{weatherInfo.current.snow["1h"]} mm/h</span>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <span className={styles.infoText}>0 mm/h</span>
+                                                            </>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -261,8 +291,12 @@ function WeatherForm() {
                                         <h3 className={styles.subTitle}>
                                             Hourly Forecast
                                         </h3>
-                                        <div>
-
+                                        <div className={styles.scrollableContainer}>
+                                            {
+                                                weatherInfo.hourly.map((hourData, index) => (
+                                                    <HourlyWeatherItem key={index} weather={hourData}/>
+                                                ))
+                                            }
                                         </div>
                                     </div>
                                 ) : (
