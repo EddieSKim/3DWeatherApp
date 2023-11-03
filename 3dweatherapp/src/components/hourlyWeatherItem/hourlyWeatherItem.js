@@ -13,7 +13,7 @@ function HourlyWeatherItem({ weather }) {
         const convertTime = (time) => {
             let currTime = convertEpochToDateTime(time).getHours();
             let hour12 = currTime % 12;
-            if(currTime < 12 || currTime === 24) {
+            if (currTime < 12 || currTime === 24) {
                 return `${hour12} AM`;
             } else {
                 return `${hour12} PM`
@@ -27,8 +27,15 @@ function HourlyWeatherItem({ weather }) {
     return (
         <div className={styles.hourItemContainer}>
             <div className={styles.itemWrapper}>
-                <div>{time}</div>
-                <div>{Math.round(hourWeather.temp)}&deg;C</div>
+                {
+                    hourWeather.weather && (
+                        <>
+                            <div>{time}</div>
+                            <img src={`https://openweathermap.org/img/wn/${hourWeather.weather[0].icon}@2x.png`}/>
+                            <div>{Math.round(hourWeather.temp)}&deg;C</div>
+                        </>
+                    )
+                }
             </div>
         </div>
     );

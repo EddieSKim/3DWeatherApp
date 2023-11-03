@@ -31,16 +31,13 @@ function WeeklyWeatherItem({ weather }) {
     return (
         <div className={styles.weatherItemContainer}>
             {
-                !isLoading ? (
+                !isLoading && (
                     <>
                         <span id={styles.dayName}>{weekDay}</span>
+                        <img src={`https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png`} alt="weeklyIcon" />
                         <span id={styles.minMaxTemp}>{Math.round(weatherItem.temp.max)}&deg;C / 
                         {Math.round(weatherItem.temp.min)}&deg;C</span>
                     </>
-                ) : (
-                    <div>
-                        Loading
-                    </div>
                 )
             }
 

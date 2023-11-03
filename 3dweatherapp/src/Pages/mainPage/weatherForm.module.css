@@ -38,6 +38,7 @@
 }
 
 .currentWeatherWrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -196,5 +197,20 @@
     margin: auto;
     width: 90%;
     height: 15vh;
-    overflow-x: auto;
+    overflow: auto;
+    scroll-behavior: smooth;
+    /* scrollbar-width: none; */
+}
+
+/* .scrollableContainer::-webkit-scrollbar {
+    display: none;
+} */
+
+.mainWeatherIcon {
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    transform: translateY(-50%);
+    width: 20%;
+    height: auto;
 }

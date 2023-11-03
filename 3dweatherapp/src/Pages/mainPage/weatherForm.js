@@ -137,6 +137,9 @@ function WeatherForm() {
                                             </span>
                                         </h1>
                                         <span className={styles.locationDate}>{locationDateTime.toDateString()}</span>
+                                        <img className={styles.mainWeatherIcon}
+                                            src={`https://openweathermap.org/img/wn/${weatherInfo.current.weather[0].icon}@4x.png`}
+                                            alt="main_weather_icon" />
                                         <span id={styles.currentTemp}>
                                             {Math.round(weatherInfo && weatherInfo.current.temp)}&deg;C
                                         </span>
@@ -179,7 +182,7 @@ function WeatherForm() {
                                                 </div>
                                                 <span className={styles.infoText}>
                                                     {weatherInfo.current.humidity}%
-                                                    </span>
+                                                </span>
                                             </div>
                                             <div>
                                                 <div className={styles.infoTitle}>
@@ -188,7 +191,7 @@ function WeatherForm() {
                                                 </div>
                                                 <span className={styles.infoText}>
                                                     {weatherInfo.current.wind_speed}m/s
-                                                    </span>
+                                                </span>
                                             </div>
                                             <div>
                                                 <div className={styles.infoTitle}>
@@ -197,7 +200,7 @@ function WeatherForm() {
                                                 </div>
                                                 <span className={styles.infoText}>
                                                     {weatherInfo.current.uvi}%
-                                                    </span>
+                                                </span>
                                             </div>
                                             <div>
                                                 <div className={styles.infoTitle}>
@@ -219,7 +222,7 @@ function WeatherForm() {
                                                 </div>
                                                 <span className={styles.infoText}>
                                                     {weatherInfo.current.pressure / 1000}khPa
-                                                    </span>
+                                                </span>
                                             </div>
                                             <div>
                                                 <span className={styles.infoTitle}>
@@ -231,12 +234,14 @@ function WeatherForm() {
                                                             <>
                                                                 {
                                                                     weatherInfo.current.rain ? (
-                                                                        <div className={styles.infoText}>
+                                                                        <div className={styles.infoText}
+                                                                            style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                                                                             <WaterDropIcon />
                                                                             <span>{weatherInfo.current.rain["1h"]} mm/h</span>
                                                                         </div>
                                                                     ) : (
-                                                                        <div className={styles.infoText}>
+                                                                        <div className={styles.infoText}
+                                                                            style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                                                                             <AcUnitIcon />
                                                                             <span>{weatherInfo.current.snow["1h"]} mm/h</span>
                                                                         </div>
@@ -287,18 +292,18 @@ function WeatherForm() {
                         <div className={styles.hourlyWeatherWrapper}>
                             {
                                 !isLoading ? (
-                                    <div>
+                                    <>
                                         <h3 className={styles.subTitle}>
-                                            Hourly Forecast
+                                            24 Hour Forecast
                                         </h3>
                                         <div className={styles.scrollableContainer}>
                                             {
                                                 weatherInfo.hourly.map((hourData, index) => (
-                                                    <HourlyWeatherItem key={index} weather={hourData}/>
+                                                    <HourlyWeatherItem key={index} weather={hourData} />
                                                 ))
                                             }
                                         </div>
-                                    </div>
+                                    </>
                                 ) : (
                                     <div>
                                         <Skeleton variant="rounded" animation="wave" width={210} height={60} />
