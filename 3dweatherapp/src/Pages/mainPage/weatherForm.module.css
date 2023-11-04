@@ -6,34 +6,27 @@
 .contentContainer {
     display: flex;
     flex-direction: row;
-}
-
-.navBarContainer {
-    flex: 10 0 0;
-    width: 10vw;
-    height: 90vh;
-}
-
-.navWrapper {
-    background-color: black;
-    width: 10vw;
-    height: 90vh;
+    justify-content: center;
+    background-color: #bdb7c3;
+    color: #bdb7c3;
 }
 
 .mainLocationContainer {
-    flex: 60 0 0;
-    width: 60vw;
+    /* flex: 60 0 0; */
+    width: 55vw;
     height: 40vh;
 }
 
 .currentWeatherContainer {
     display: flex;
     flex-direction: column;
-    background-color: rgb(87, 126, 83);
-    width: 60vw;
+    /* background-color: rgb(87, 126, 83); */
+    /* width: 60vw; */
+    width: 55vw;
     height: 40vh;
     align-items: center;
     justify-content: space-evenly;
+    position: relative;
 
 }
 
@@ -42,7 +35,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background-color: grey;
+    background-color: #303042;
     border-radius: 20px;
     width: 96%;
     height: 80%;
@@ -50,15 +43,15 @@
 
 .weatherInfo {
     display: flex;
-    background-color: red;
-    width: 60vw;
+    /* background-color: red; */
+    width: 55vw;
     height: 25vh;
     align-items: center;
     justify-content: center;
 }
 
 .weatherInfoWrapper {
-    background-color: grey;
+    background-color: #303042;
     border-radius: 20px;
     width: 96%;
     height: 90%;
@@ -66,15 +59,15 @@
 
 .hourlyWeatherContainer {
     display: flex;
-    background-color: blue;
-    width: 60vw;
+    /* background-color: blue; */
+    width: 55vw;
     height: 25vh;
     align-items: center;
     justify-content: center;
 }
 
 .hourlyWeatherWrapper {
-    background-color: grey;
+    background-color: #303042;
     border-radius: 20px;
     width: 96%;
     height: 90%;
@@ -82,18 +75,19 @@
 
 .weeklyWeatherContainer {
     display: flex;
-    background-color: aquamarine;
-    flex: 30 0 0;
-    width: 30vw;
+    /* background-color: aquamarine; */
+    /* flex: 30 0 0; */
+    /* width: 30vw; */
+    width: 25vw;
     height: 90vh;
     justify-content: center;
     align-items: flex-end;
 }
 
 .weeklyWeatherWrapper {
-    background-color: blueviolet;
+    background-color: #303042;
     width: 90%;
-    height: 90%;
+    height: 91%;
     border-radius: 20px;
     margin-bottom: 1vh;
 }
@@ -106,8 +100,15 @@
     align-items: center;
 }
 
+.searchBarWrapper {
+    display: inline-block;
+    width: 100%;
+}
+
 .searchLocation {
     width: 80%;
+    float: left;
+    margin-left: 20px !important;
 }
 
 .locationTitle {

@@ -20,7 +20,6 @@ function WeatherForm() {
 
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
-    const [weatherList, updateWeatherList] = useState([]);
     const [weatherInfo, setWeatherInfo] = useState({});
     const [location, setLocation] = useState("");
     const [locationDateTime, setLocationDateTime] = useState("");
@@ -29,6 +28,31 @@ function WeatherForm() {
     useEffect(() => {
         setIsLoading(true);
         // fetch the weather info of location
+        // if(navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(
+        //         (position) => {
+        //             const {latitude, longitude} = position.coords;
+                    
+        //             Promise.all([
+        //                 fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&units=metric&appid=${key}`),
+        //                 fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${key}`)
+        //             ])
+        //             .then(([resWeather, resLocation]) => 
+        //                 Promise.all([resWeather.json(), resLocation.json()])
+        //             )
+        //             .then(([dataWeather, dataLocation]) => {
+        //                 setWeatherInfo(dataWeather);
+        //                 setLocation(dataLocation[0]);
+        //                 setLocationDateTime(convertEpochToDateTime(dataWeather.current.dt));
+        //                 setIsLoading(false);
+        //             })
+        //         },
+        //         (error) => {
+        //             console.error(error);
+        //             setIsLoading(false);
+        //         }
+        //     )
+        // }
         fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=51.0447&lon=-114.0719&exclude=minutely&units=metric&appid=${key}`)
             .then(res => res.json())
             .then(data => {
@@ -40,7 +64,6 @@ function WeatherForm() {
                     })
                     .catch(err => console.error(err))
                 setWeatherInfo(data);
-                updateWeatherList([data]);
                 setLocationDateTime(convertEpochToDateTime(data.current.dt));
                 setIsLoading(false);
             })
@@ -109,23 +132,22 @@ function WeatherForm() {
                 <span>Weather App</span>
             </div>
             <div className={styles.contentContainer}>
-                <div className={styles.navBarContainer}>
-                    <div className={styles.navWrapper}>
-
-                    </div>
-                </div>
                 <div className={styles.mainLocationContainer}>
                     <div className={styles.currentWeatherContainer}>
-                        <TextField
-                            className={styles.searchLocation}
-                            onChange={searchChange}
-                            value={searchQuery}
-                            InputProps={{
-                                endAdornment:
-                                    <InputAdornment position="end">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                            }} />
+                        <div className={styles.searchBarWrapper}>
+                            <TextField
+                                variant="standard"
+                                className={styles.searchLocation}
+                                onChange={searchChange}
+                                value={searchQuery}
+                                label="Search for City"
+                                InputProps={{
+                                    endAdornment:
+                                        <InputAdornment position="end">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                }} />
+                        </div>
                         <div className={styles.currentWeatherWrapper}>
                             {
                                 !isLoading ? (
@@ -237,13 +259,17 @@ function WeatherForm() {
                                                                         <div className={styles.infoText}
                                                                             style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                                                                             <WaterDropIcon />
-                                                                            <span>{weatherInfo.current.rain["1h"]} mm/h</span>
+                                                                            <span style={{ marginLeft: "5px" }}>
+                                                                                {weatherInfo.current.rain["1h"]} mm/h
+                                                                            </span>
                                                                         </div>
                                                                     ) : (
                                                                         <div className={styles.infoText}
                                                                             style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                                                                             <AcUnitIcon />
-                                                                            <span>{weatherInfo.current.snow["1h"]} mm/h</span>
+                                                                            <span style={{ marginLeft: "5px" }}>
+                                                                                {weatherInfo.current.snow["1h"]} mm/h
+                                                                            </span>
                                                                         </div>
                                                                     )
                                                                 }
@@ -294,7 +320,7 @@ function WeatherForm() {
                                 !isLoading ? (
                                     <>
                                         <h3 className={styles.subTitle}>
-                                            24 Hour Forecast
+                                            Hourly Forecast
                                         </h3>
                                         <div className={styles.scrollableContainer}>
                                             {

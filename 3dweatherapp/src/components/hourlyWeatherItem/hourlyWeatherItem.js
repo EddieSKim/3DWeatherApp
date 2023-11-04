@@ -16,6 +16,9 @@ function HourlyWeatherItem({ weather }) {
             if (currTime < 12 || currTime === 24) {
                 return `${hour12} AM`;
             } else {
+                if (currTime === 12){
+                    return `12 PM`
+                }
                 return `${hour12} PM`
             }
         }
