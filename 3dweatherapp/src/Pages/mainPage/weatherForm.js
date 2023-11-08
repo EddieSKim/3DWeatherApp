@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { TextField, Skeleton } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -14,6 +14,7 @@ import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 import OpacityIcon from '@mui/icons-material/Opacity';
+import { ThemeContext } from "../../contexts/themeContext";
 
 
 function WeatherForm() {
@@ -24,15 +25,17 @@ function WeatherForm() {
     const [location, setLocation] = useState("");
     const [locationDateTime, setLocationDateTime] = useState("");
     const key = process.env.REACT_APP_API_KEY;
-
+    const { theme } = useContext(ThemeContext);
+    
     useEffect(() => {
         setIsLoading(true);
+        
         // fetch the weather info of location
         // if(navigator.geolocation) {
         //     navigator.geolocation.getCurrentPosition(
         //         (position) => {
         //             const {latitude, longitude} = position.coords;
-                    
+
         //             Promise.all([
         //                 fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&units=metric&appid=${key}`),
         //                 fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${key}`)
@@ -88,7 +91,7 @@ function WeatherForm() {
     // }
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} data-theme={theme}>
             {/* <TextField
                 onChange={searchChange}
                 value={searchQuery}
@@ -128,14 +131,27 @@ function WeatherForm() {
                     )}
                 </Droppable>
             </DragDropContext> */}
-            <div className={styles.header}>
-                <span>Weather App</span>
-            </div>
             <div className={styles.contentContainer}>
                 <div className={styles.mainLocationContainer}>
                     <div className={styles.currentWeatherContainer}>
                         <div className={styles.searchBarWrapper}>
                             <TextField
+                                sx={{
+                                    input: { color: "#303042" },
+                                    "& .MuiOutlinedInput-root.Mui-focused": {
+                                        "& fieldset": {
+                                            borderColor: "#ffffff",
+                                        },
+                                    },
+                                    "&.Mui-focused": {
+                                        borderColor: "orange",
+                                    },
+                                }}
+                                InputLabelProps={{
+                                    sx: {
+                                        color: '#303042',
+                                    },
+                                }}
                                 variant="standard"
                                 className={styles.searchLocation}
                                 onChange={searchChange}

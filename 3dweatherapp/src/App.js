@@ -1,19 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Routes, Route } from 'react-router-dom';
 import WeatherForm from "./Pages/mainPage/weatherForm";
 import NewLocationForm from "./Pages/newLocationForm/newLocationForm";
 import NavBar from "./components/navBar/navBar";
+import { ThemeProvider } from "./contexts/themeProvider";
 
 function App() {
 
   return (
-    <>
-    <NavBar />
+    <ThemeProvider>
+      <NavBar />
       <Routes>
-        <Route path="/" element={<WeatherForm />}/>
-        <Route path="/NewLocation" element={<NewLocationForm />} />
+        <Route path="/" element={<WeatherForm />} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }
 

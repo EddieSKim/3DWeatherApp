@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import styles from "./weeklyWeatherItem.module.css"
 
 const days = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday"
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+    "Sun"
 ]
 
 function WeeklyWeatherItem({ weather }) {
@@ -35,8 +35,14 @@ function WeeklyWeatherItem({ weather }) {
                     <>
                         <span id={styles.dayName}>{weekDay}</span>
                         <img src={`https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png`} alt="weeklyIcon" />
-                        <span id={styles.minMaxTemp}>{Math.round(weatherItem.temp.max)}&deg;C / 
-                        {Math.round(weatherItem.temp.min)}&deg;C</span>
+                        <div className={styles.minMaxTemp}>
+                            <span id={styles.maxTemp}>
+                                {Math.round(weatherItem.temp.max)}&deg;C
+                            </span> / 
+                            <span id={styles.minTemp}>
+                                {Math.round(weatherItem.temp.min)}&deg;C
+                            </span>
+                        </div>
                     </>
                 )
             }

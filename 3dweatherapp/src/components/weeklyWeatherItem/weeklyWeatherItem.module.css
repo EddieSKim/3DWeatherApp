@@ -13,6 +13,14 @@
     margin-left: 10px;
 }
 
-#minMaxTemp {
+.minMaxTemp {
     margin-right: 10px;
+}
+
+#maxTemp {
+    font-size: 1.1rem;
+}
+
+#minTemp {
+    font-size: 1rem;
 }

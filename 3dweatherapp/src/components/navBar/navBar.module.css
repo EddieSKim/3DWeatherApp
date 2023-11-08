@@ -1,0 +1,9 @@
+.navBarContainer {
+    width: 100vw;
+    height: 4vh;
+    background-color: #303042;
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    
+}
