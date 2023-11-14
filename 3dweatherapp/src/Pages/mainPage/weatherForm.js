@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { TextField, Skeleton } from "@mui/material";
+import { TextField, Skeleton, Autocomplete } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import styles from "./weatherForm.module.css";
@@ -25,11 +25,15 @@ function WeatherForm() {
     const [location, setLocation] = useState("");
     const [locationDateTime, setLocationDateTime] = useState("");
     const key = process.env.REACT_APP_API_KEY;
+    const mapTilerKey = process.env.REACT_APP_MAPTILER_API_KEY;
     const { theme } = useContext(ThemeContext);
-    
+    const [citySuggestions, setCitySuggestions] = useState([]);
+    const [inputValue, setInputValue] = useState("");
+    let timeOutId = null;
+
     useEffect(() => {
         setIsLoading(true);
-        
+
         // fetch the weather info of location
         // if(navigator.geolocation) {
         //     navigator.geolocation.getCurrentPosition(
@@ -73,12 +77,29 @@ function WeatherForm() {
             .catch(err => console.error(err));
     }, []);
 
+    useEffect(() => {
+        if(inputValue) {
+
+        }
+    },[inputValue])
+
     const convertEpochToDateTime = (epoch) => {
         return new Date(epoch * 1000);
     }
 
-    const searchChange = (event) => {
-        setSearchQuery(event.target.value);
+    const handleCitySelect = (event, value) => {
+        console.log(value);
+    }
+
+    const handleInputChange = ( event, value ) => {
+        // Clear ongoing timeout
+        clearTimeout(timeOutId);
+
+        // wait before setting inputValue to avoid making too many api calls
+        // 500ms
+        timeOutId = setTimeout(() => {
+            setInputValue(value)
+        }, 500)
     }
 
     // const handleDragEnd = (result) => {
@@ -135,34 +156,47 @@ function WeatherForm() {
                 <div className={styles.mainLocationContainer}>
                     <div className={styles.currentWeatherContainer}>
                         <div className={styles.searchBarWrapper}>
-                            <TextField
+                            <Autocomplete
+                                onInputChange={handleInputChange}
+                                onChange={handleCitySelect}
+                                className={styles.searchLocation}
+                                selectOnFocus
+                                options={citySuggestions}
+                                getOptionLabel={(option) => option}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="City" variant="standard" />
+                                )} />
+                            {/* <TextField
                                 sx={{
-                                    input: { color: "#303042" },
-                                    "& .MuiOutlinedInput-root.Mui-focused": {
-                                        "& fieldset": {
-                                            borderColor: "#ffffff",
-                                        },
+                                    input: { color: theme === "light" ? '#303042' : '#ffffff' },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: theme === "light" ? '#303042' : '#856f72',
                                     },
-                                    "&.Mui-focused": {
-                                        borderColor: "orange",
+                                    "& .MuiInput-underline:before": {
+                                        borderBottomColor: theme === "light" ? '#303042' : '#ffffff',
                                     },
+                                    "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+                                        borderBottomColor: theme === "light" ? '#303042' : '#ffffff',
+                                    },
+                                    "& label.Mui-focused": {
+                                        color: theme === "light" ? '#303042' : '#ffffff',
+                                    }
                                 }}
                                 InputLabelProps={{
                                     sx: {
-                                        color: '#303042',
+                                        color: theme === "light" ? '#303042' : '#ffffff',
                                     },
                                 }}
                                 variant="standard"
                                 className={styles.searchLocation}
-                                onChange={searchChange}
                                 value={searchQuery}
                                 label="Search for City"
                                 InputProps={{
                                     endAdornment:
                                         <InputAdornment position="end">
-                                            <SearchIcon />
+                                            <SearchIcon sx={{ color: theme === "light" ? '#303042' : '#ffffff', }} />
                                         </InputAdornment>
-                                }} />
+                                }} /> */}
                         </div>
                         <div className={styles.currentWeatherWrapper}>
                             {
