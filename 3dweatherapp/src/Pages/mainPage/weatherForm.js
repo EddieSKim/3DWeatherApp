@@ -5,7 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import styles from "./weatherForm.module.css";
 import WeeklyWeatherItem from "../../components/weeklyWeatherItem/weeklyWeatherItem";
 import HourlyWeatherItem from "../../components/hourlyWeatherItem/hourlyWeatherItem";
-// import { Link } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 // import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AirIcon from '@mui/icons-material/Air';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
@@ -18,49 +18,30 @@ import { ThemeContext } from "../../contexts/themeContext";
 
 
 function WeatherForm() {
-
-    const [isLoading, setIsLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [weatherInfo, setWeatherInfo] = useState({});
-    const [location, setLocation] = useState("");
-    const [locationDateTime, setLocationDateTime] = useState("");
     const key = process.env.REACT_APP_API_KEY;
     const mapTilerKey = process.env.REACT_APP_MAPTILER_API_KEY;
     const { theme } = useContext(ThemeContext);
+    let timeOutId = null;
+    const navigate = useNavigate();
+    const loc = useLocation();
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [weatherInfo, setWeatherInfo] = useState({});
+    const [location, setLocation] = useState("");
+    const [locationDateTime, setLocationDateTime] = useState("");
     const [citySuggestions, setCitySuggestions] = useState([]);
     const [inputValue, setInputValue] = useState("");
-    let timeOutId = null;
+    const [selectedCity, setSelectedCity] = useState({});
+    const [searchIsLoading, setSearchIsLoading] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         setIsLoading(true);
 
-        // fetch the weather info of location
-        // if(navigator.geolocation) {
-        //     navigator.geolocation.getCurrentPosition(
-        //         (position) => {
-        //             const {latitude, longitude} = position.coords;
+        const lat = searchParams.get("lat");
+        const long = searchParams.get("long");
 
-        //             Promise.all([
-        //                 fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely&units=metric&appid=${key}`),
-        //                 fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${key}`)
-        //             ])
-        //             .then(([resWeather, resLocation]) => 
-        //                 Promise.all([resWeather.json(), resLocation.json()])
-        //             )
-        //             .then(([dataWeather, dataLocation]) => {
-        //                 setWeatherInfo(dataWeather);
-        //                 setLocation(dataLocation[0]);
-        //                 setLocationDateTime(convertEpochToDateTime(dataWeather.current.dt));
-        //                 setIsLoading(false);
-        //             })
-        //         },
-        //         (error) => {
-        //             console.error(error);
-        //             setIsLoading(false);
-        //         }
-        //     )
-        // }
-        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=51.0447&lon=-114.0719&exclude=minutely&units=metric&appid=${key}`)
+        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely&units=metric&appid=${key}`)
             .then(res => res.json())
             .then(data => {
                 // Fetch the location name 
@@ -75,31 +56,65 @@ function WeatherForm() {
                 setIsLoading(false);
             })
             .catch(err => console.error(err));
-    }, []);
+        // checking location
+        // If page back/forward trigger useEffect
+    }, [loc]);
 
     useEffect(() => {
-        if(inputValue) {
-
+        setSearchIsLoading(true);
+        if (inputValue) {
+            console.log(inputValue)
+            fetch(`https://api.maptiler.com/geocoding/${inputValue}.json?fuzzyMatch=true&limit=3&key=${mapTilerKey}&autocomplete=true`)
+                .then(res => res.json())
+                .then(data => {
+                    const cityNames = data.features.map(
+                        feature => ({ label: feature.place_name, long: feature.geometry.coordinates[0], lat: feature.geometry.coordinates[1] })
+                    );
+                    setCitySuggestions(cityNames);
+                    setSearchIsLoading(false);
+                })
         }
-    },[inputValue])
+    }, [inputValue])
 
     const convertEpochToDateTime = (epoch) => {
         return new Date(epoch * 1000);
     }
 
     const handleCitySelect = (event, value) => {
-        console.log(value);
+        setSelectedCity(value);
+        if (value) {
+            setIsLoading(true);
+            navigate(`/app?lat=${value.lat}&long=${value.long}`, { replace: true });
+            //setSearchParams({ lat: value.lat, long: value.long });
+            fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${value.lat}&lon=${value.long}&exclude=minutely&units=metric&appid=${key}`)
+                .then(res => res.json())
+                .then(data => {
+                    // Fetch the location name 
+                    fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${data.lat}&lon=${data.lon}&limit=1&appid=${key}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            setLocation(data[0]);
+                        })
+                        .catch(err => console.error(err))
+                    setWeatherInfo(data);
+                    setLocationDateTime(convertEpochToDateTime(data.current.dt));
+                    setIsLoading(false);
+                })
+                .catch(err => console.error(err));
+        }
     }
 
-    const handleInputChange = ( event, value ) => {
+    const handleInputChange = (event, value, reason) => {
         // Clear ongoing timeout
         clearTimeout(timeOutId);
 
-        // wait before setting inputValue to avoid making too many api calls
-        // 500ms
-        timeOutId = setTimeout(() => {
-            setInputValue(value)
-        }, 500)
+        // Check reason, if "input" then it is the user typing into search bar
+        if (reason === "input") {
+            // wait before setting inputValue to avoid making api call for each letter input
+            timeOutId = setTimeout(() => {
+                setInputValue(value);
+            }, 1000)
+        }
     }
 
     // const handleDragEnd = (result) => {
@@ -161,8 +176,10 @@ function WeatherForm() {
                                 onChange={handleCitySelect}
                                 className={styles.searchLocation}
                                 selectOnFocus
+                                loading={searchIsLoading}
                                 options={citySuggestions}
-                                getOptionLabel={(option) => option}
+                                getOptionLabel={(option) => option.label}
+                                noOptionsText="Search City Name"
                                 renderInput={(params) => (
                                     <TextField {...params} label="City" variant="standard" />
                                 )} />

@@ -1,0 +1,29 @@
+:root {
+    --background: #e3e8e5;
+    --primary: #acb9b8;
+    --secondary: #dfdedd;
+    ---text-primary: #0a0a0a;
+    --accent: #907a7d;
+}
+
+[data-theme="dark"] {
+    --background: #171c19;
+    --primary: #465352;
+    --secondary: #161315;
+    --text-primary: #ecefed;
+    --accent: #856f72;
+}
+
+
+.main_container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background);
+}
+
+.searchBar {
+    width: 50%;
+}
