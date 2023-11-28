@@ -128,12 +128,13 @@
 .searchBarWrapper {
     display: inline-block;
     width: 100%;
+    margin-top: 10px;
 }
 
 .searchLocation {
     width: 80%;
     float: left;
-    margin-left: 20px !important;
+    margin-left: 1.5vw !important;
 }
 
 .locationTitle {

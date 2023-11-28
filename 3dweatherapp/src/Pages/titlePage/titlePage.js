@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, TextField, InputAdornment } from "@mui/material";
 import styles from "./titlePage.module.css";
 import { ThemeContext } from "../../contexts/themeContext";
 import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
 
 function TitlePage() {
     const mapTilerKey = process.env.REACT_APP_MAPTILER_API_KEY;
@@ -70,17 +71,54 @@ function TitlePage() {
 
     return (
         <div className={styles.main_container} data-theme={theme}>
+            <div className={styles.mainText}>
+                Please enable location to automatically search for your current location or you can search for a city name in the search box below.
+            </div>
             <Autocomplete
-                className={styles.searchBar}
                 onInputChange={handleInputChange}
                 onChange={handleCitySelect}
+                className={styles.searchBar}
                 selectOnFocus
                 loading={searchIsLoading}
                 options={citySuggestions}
                 getOptionLabel={(option) => option.label}
                 noOptionsText="Search City Name"
+                popupIcon={<SearchIcon />}
+                sx={{
+                    // prevent icon from rotating 180 deg
+                    '.MuiAutocomplete-popupIndicator': {
+                        transform: 'none',
+                    },
+                }}
                 renderInput={(params) => (
-                    <TextField {...params} label="City" variant="outlined" />
+                    <TextField
+                        {...params}
+                        label="Search City"
+                        variant="outlined"
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                    color: theme === "light" ? '#303042' : '#ffffff'
+                                },
+                            },
+                            '.MuiButtonBase-root': {
+                                color: theme === "light" ? '#303042' : '#ffffff',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: theme === "light" ? '#303042' : '#ffffff',
+                            },
+                        }} InputLabelProps={{
+                            style: {
+                                color: theme === "light" ? '#303042' : '#ffffff',
+                            },
+                        }} />
                 )} />
         </div>
     )

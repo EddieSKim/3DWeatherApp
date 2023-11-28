@@ -180,40 +180,43 @@ function WeatherForm() {
                                 options={citySuggestions}
                                 getOptionLabel={(option) => option.label}
                                 noOptionsText="Search City Name"
-                                renderInput={(params) => (
-                                    <TextField {...params} label="City" variant="standard" />
-                                )} />
-                            {/* <TextField
+                                popupIcon={<SearchIcon />}
                                 sx={{
-                                    input: { color: theme === "light" ? '#303042' : '#ffffff' },
-                                    "& .MuiInput-underline:after": {
-                                        borderBottomColor: theme === "light" ? '#303042' : '#856f72',
-                                    },
-                                    "& .MuiInput-underline:before": {
-                                        borderBottomColor: theme === "light" ? '#303042' : '#ffffff',
-                                    },
-                                    "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                                        borderBottomColor: theme === "light" ? '#303042' : '#ffffff',
-                                    },
-                                    "& label.Mui-focused": {
-                                        color: theme === "light" ? '#303042' : '#ffffff',
-                                    }
-                                }}
-                                InputLabelProps={{
-                                    sx: {
-                                        color: theme === "light" ? '#303042' : '#ffffff',
+                                    // prevent icon from rotating 180 deg
+                                    '.MuiAutocomplete-popupIndicator': {
+                                        transform: 'none',
                                     },
                                 }}
-                                variant="standard"
-                                className={styles.searchLocation}
-                                value={searchQuery}
-                                label="Search for City"
-                                InputProps={{
-                                    endAdornment:
-                                        <InputAdornment position="end">
-                                            <SearchIcon sx={{ color: theme === "light" ? '#303042' : '#ffffff', }} />
-                                        </InputAdornment>
-                                }} /> */}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Search City"
+                                        variant="outlined"
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                '& fieldset': {
+                                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                                },
+                                                '&:hover fieldset': {
+                                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                                },
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                                    color: theme === "light" ? '#303042' : '#ffffff'
+                                                },
+                                            },
+                                            '.MuiButtonBase-root': {
+                                                color: theme === "light" ? '#303042' : '#ffffff',
+                                            },
+                                            '& .MuiInputBase-input': {
+                                                color: theme === "light" ? '#303042' : '#ffffff',
+                                            },
+                                        }} InputLabelProps={{
+                                            style: {
+                                                color: theme === "light" ? '#303042' : '#ffffff',
+                                            },
+                                        }} />
+                                )} />
                         </div>
                         <div className={styles.currentWeatherWrapper}>
                             {

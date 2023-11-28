@@ -7,7 +7,6 @@ function NavBar() {
     const { theme } = useContext(ThemeContext);
     return(
         <div className={styles.navBarContainer} data-theme={theme}>
-            NAVBAR
             <ThemeSwitch />
         </div>
     );
