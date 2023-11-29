@@ -1,8 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Routes, Route } from 'react-router-dom';
 import WeatherForm from "./Pages/mainPage/weatherForm";
 import TitlePage from "./Pages/titlePage/titlePage";
-import NewLocationForm from "./Pages/newLocationForm/newLocationForm";
 import NavBar from "./components/navBar/navBar";
 import { ThemeProvider } from "./contexts/themeProvider";
 
