@@ -117,107 +117,59 @@ function WeatherForm() {
         }
     }
 
-    // const handleDragEnd = (result) => {
-    //     if (!result.destination) return;
-
-    //     const items = Array.from(weatherList);
-    //     const [reorderedItem] = items.splice(result.source.index, 1);
-    //     items.splice(result.destination.index, 0, reorderedItem);
-    //     updateWeatherList(items);
-    // }
-
     return (
         <div className={styles.container} data-theme={theme}>
-            {/* <TextField
-                onChange={searchChange}
-                value={searchQuery}
-                InputProps={{
-                    endAdornment:
-                        <InputAdornment position="end">
-                            <SearchIcon />
-                        </InputAdornment>
-                }} /> */}
-            {/* <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="droppable">
-                    {(provided) => (
-                        <div
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                        >
-                            {weatherList.map((item, index) => (
-                                <Draggable
-                                    key={item.lat}
-                                    draggableId={item.lat.toString()}
-                                    index={index}>
-                                    {(provided) => (
-                                        <div
-                                            className={styles.draggableWrapper}
-                                            ref={provided.innerRef}
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                        >
-                                            {item.temp}
-                                            <WeatherBlock weather={weatherInfo} />
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext> */}
+            <div className={styles.searchBarWrapper}>
+                <Autocomplete
+                    onInputChange={handleInputChange}
+                    onChange={handleCitySelect}
+                    className={styles.searchLocation}
+                    selectOnFocus
+                    loading={searchIsLoading}
+                    options={citySuggestions}
+                    getOptionLabel={(option) => option.label}
+                    noOptionsText="Search City Name"
+                    popupIcon={<SearchIcon />}
+                    sx={{
+                        // prevent icon from rotating 180 deg
+                        '.MuiAutocomplete-popupIndicator': {
+                            transform: 'none',
+                        },
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Search City"
+                            variant="outlined"
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                        borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: theme === "light" ? '#303042' : '#ffffff',
+                                        color: theme === "light" ? '#303042' : '#ffffff'
+                                    },
+                                },
+                                '.MuiButtonBase-root': {
+                                    color: theme === "light" ? '#303042' : '#ffffff',
+                                },
+                                '& .MuiInputBase-input': {
+                                    color: theme === "light" ? '#303042' : '#ffffff',
+                                },
+                            }} InputLabelProps={{
+                                style: {
+                                    color: theme === "light" ? '#303042' : '#ffffff',
+                                },
+                            }} />
+                    )} />
+            </div>
             <div className={styles.contentContainer}>
                 <div className={styles.mainLocationContainer}>
                     <div className={styles.currentWeatherContainer}>
-                        <div className={styles.searchBarWrapper}>
-                            <Autocomplete
-                                onInputChange={handleInputChange}
-                                onChange={handleCitySelect}
-                                className={styles.searchLocation}
-                                selectOnFocus
-                                loading={searchIsLoading}
-                                options={citySuggestions}
-                                getOptionLabel={(option) => option.label}
-                                noOptionsText="Search City Name"
-                                popupIcon={<SearchIcon />}
-                                sx={{
-                                    // prevent icon from rotating 180 deg
-                                    '.MuiAutocomplete-popupIndicator': {
-                                        transform: 'none',
-                                    },
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Search City"
-                                        variant="outlined"
-                                        sx={{
-                                            '& .MuiOutlinedInput-root': {
-                                                '& fieldset': {
-                                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
-                                                },
-                                                '&:hover fieldset': {
-                                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
-                                                },
-                                                '&.Mui-focused fieldset': {
-                                                    borderColor: theme === "light" ? '#303042' : '#ffffff',
-                                                    color: theme === "light" ? '#303042' : '#ffffff'
-                                                },
-                                            },
-                                            '.MuiButtonBase-root': {
-                                                color: theme === "light" ? '#303042' : '#ffffff',
-                                            },
-                                            '& .MuiInputBase-input': {
-                                                color: theme === "light" ? '#303042' : '#ffffff',
-                                            },
-                                        }} InputLabelProps={{
-                                            style: {
-                                                color: theme === "light" ? '#303042' : '#ffffff',
-                                            },
-                                        }} />
-                                )} />
-                        </div>
                         <div className={styles.currentWeatherWrapper}>
                             {
                                 !isLoading ? (
@@ -258,7 +210,7 @@ function WeatherForm() {
                             }
                         </div>
                     </div>
-                    <div className={styles.weatherInfo}>
+                    <div className={styles.weatherInfoContainer}>
                         <div className={styles.weatherInfoWrapper}>
                             {
                                 !isLoading ? (
@@ -394,7 +346,7 @@ function WeatherForm() {
                                         </h3>
                                         <div className={styles.scrollableContainer}>
                                             {
-                                                weatherInfo.hourly.map((hourData, index) => (
+                                                weatherInfo.hourly.slice(0,24).map((hourData, index) => (
                                                     <HourlyWeatherItem key={index} weather={hourData} />
                                                 ))
                                             }
@@ -410,37 +362,39 @@ function WeatherForm() {
                     </div>
                 </div>
                 <div className={styles.weeklyWeatherContainer}>
-                    {
-                        !isLoading ? (
-                            <div className={styles.weeklyWeatherWrapper}>
-                                <h3 className={styles.weekTitle}>7-Day Forecast</h3>
-                                <div className={styles.weeklyList}>
-                                    {
-                                        weatherInfo.daily.map((item, index) => (
-                                            <WeeklyWeatherItem
-                                                key={index}
-                                                weather={item} />
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                        ) : (
-                            <div className={styles.weeklyWeatherWrapper}>
-                                <div className={styles.weekTitle}>
-                                    <Skeleton variant="rounded" animation="wave" width={200} height={30} />
-                                </div>
-                                <div className={styles.loaderWrapper}>
-                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
-                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
-                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
-                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
-                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
-                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
-                                    <Skeleton variant="rounded" animation="wave" width={300} height={50} />
-                                </div>
-                            </div>
-                        )
-                    }
+                    <div className={styles.weeklyWeatherWrapper}>
+                        {
+                            !isLoading ? (
+                                <>
+                                    <h3 className={styles.weekTitle}>7-Day Forecast</h3>
+                                    <div className={styles.weeklyList}>
+                                        {
+                                            weatherInfo.daily.map((item, index) => (
+                                                <WeeklyWeatherItem
+                                                    key={index}
+                                                    weather={item} />
+                                            ))
+                                        }
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className={styles.weekTitle}>
+                                        <Skeleton variant="rounded" animation="wave" width={200} height={30} />
+                                    </div>
+                                    <div className={styles.loaderWrapper}>
+                                        <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                        <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                        <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                        <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                        <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                        <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                        <Skeleton variant="rounded" animation="wave" width={300} height={50} />
+                                    </div>
+                                </>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
         </div>

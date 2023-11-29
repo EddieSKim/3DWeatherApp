@@ -16,7 +16,7 @@ function HourlyWeatherItem({ weather }) {
             if (currTime < 12 || currTime === 24) {
                 return `${hour12} AM`;
             } else {
-                if (currTime === 12){
+                if (currTime === 12) {
                     return `12 PM`
                 }
                 return `${hour12} PM`
@@ -33,9 +33,10 @@ function HourlyWeatherItem({ weather }) {
                 {
                     hourWeather.weather && (
                         <>
-                            <div>{time}</div>
-                            <img src={`https://openweathermap.org/img/wn/${hourWeather.weather[0].icon}@2x.png`}/>
-                            <div>{Math.round(hourWeather.temp)}&deg;C</div>
+                            <div className={styles.hourlyHeader}>{time}</div>
+                            <img className={styles.hourlyIcon}
+                                src={`https://openweathermap.org/img/wn/${hourWeather.weather[0].icon}@2x.png`} />
+                            <div className={styles.hourlyHeader}>{Math.round(hourWeather.temp)}&deg;C</div>
                         </>
                     )
                 }

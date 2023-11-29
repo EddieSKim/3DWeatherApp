@@ -1,7 +1,6 @@
 .hourItemContainer {
     display: flex;
     width: 90%;
-    height: 100%;
 }
 
 .itemWrapper {
@@ -11,4 +10,51 @@
     flex-direction: column;
     align-items: center;
     font-family: 'Nunito', sans-serif;
+}
+
+.hourlyHeader {
+    font-size: 1rem;
+}
+
+@media screen and (max-height: 1270px) {
+    .itemWrapper {
+        width: 10vw;
+    }
+
+    .hourlyIcon {
+        width: 6vw;
+    }
+
+    .hourlyHeader {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 810px) {
+    .itemWrapper {
+        width: 14vw;
+    }
+
+    .hourlyIcon {
+        width: 10vw;
+    }
+
+    .hourlyHeader {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    .itemWrapper {
+        width: 16vw;
+        height: 80%;
+    }
+
+    .hourlyIcon {
+        width: 10vw;
+    }
+
+    .hourlyHeader {
+        font-size: 1rem;
+    }
 }

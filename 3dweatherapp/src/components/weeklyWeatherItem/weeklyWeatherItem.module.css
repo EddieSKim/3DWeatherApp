@@ -1,6 +1,8 @@
 .weatherItemContainer {
     width: 100%;
     height: 20%;
+    margin-left: 1vw;
+    margin-right: 1vw;
     display: flex;
     flex-direction: row;
     font-family: 'Nunito', sans-serif;
@@ -10,11 +12,11 @@
 }
 
 #dayName {
-    margin-left: 10px;
+    margin-left: 2vw;
 }
 
 .minMaxTemp {
-    margin-right: 10px;
+    margin-right: 2vw;
 }
 
 #maxTemp {
@@ -23,4 +25,16 @@
 
 #minTemp {
     font-size: 1rem;
+}
+
+@media screen and (max-height: 1125px) {
+    .weatherItemContainer {
+        height: 12%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .weatherItemContainer {
+        height: 12%;
+    }
 }
