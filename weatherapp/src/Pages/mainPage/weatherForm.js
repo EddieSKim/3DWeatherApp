@@ -90,7 +90,7 @@ function WeatherForm() {
                 .then(res => res.json())
                 .then(data => {
                     // Fetch the location name 
-                    fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${data.lat}&lon=${data.lon}&limit=1&appid=${key}`)
+                    fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${data.lat}&lon=${data.lon}&limit=1&appid=${key}`)
                         .then(res => res.json())
                         .then(data => {
                             setLocation(data[0]);
