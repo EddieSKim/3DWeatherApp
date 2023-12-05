@@ -6,6 +6,7 @@ import Switch from '@mui/joy/Switch';
 
 function ThemeSwitch() {
     const { switchTheme, theme } = useContext(ThemeContext);
+    const smallMediaScreen = window.matchMedia("(max-height: 400px)").matches;
 
     // Switch from mui/joy allows easier customization
     return (
@@ -28,9 +29,9 @@ function ThemeSwitch() {
                     }} />
                 }
                 sx={{
-                    "--Switch-trackWidth": "50px",
-                    "--Switch-trackRadius": "24px",
-                    "--Switch-trackHeight": "25px",
+                    "--Switch-trackWidth": smallMediaScreen ? "40px" : "50px",
+                    "--Switch-trackRadius": smallMediaScreen ? "20px" : "24px",
+                    "--Switch-trackHeight": smallMediaScreen ? "20px" : "25px",
                     "--Switch-gap": "11px",
                     '--Switch-trackBackground': '#f5ba1d',
                     '&:hover': {

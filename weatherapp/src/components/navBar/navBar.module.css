@@ -18,8 +18,14 @@
     z-index: 999;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 500px) and (orientation: portrait) {
     .navBarContainer {
         height: 6.5vh;
+    }
+}
+
+@media screen and (orientation: landscape) and (max-device-width: 920px){
+    .navBarContainer {
+        height: 8vh;
     }
 }

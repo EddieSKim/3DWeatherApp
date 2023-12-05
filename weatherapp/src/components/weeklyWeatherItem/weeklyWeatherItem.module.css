@@ -38,3 +38,9 @@
         height: 12%;
     }
 }
+
+@media screen and (orientation: landscape) and (max-device-width: 920px) {
+    .weekIcon {
+        width: 40%;
+    }
+}
