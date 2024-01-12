@@ -185,7 +185,7 @@ function WeatherForm() {
                                             <img className={styles.mainWeatherIcon}
                                                 src={`https://openweathermap.org/img/wn/${weatherInfo.current.weather[0].icon}@4x.png`}
                                                 alt="main_weather_icon" />
-                                            <span id={styles.currentTemp}>
+                                            <span className={styles.currentTemp}>
                                                 {Math.round(weatherInfo && weatherInfo.current.temp)}&deg;C
                                             </span>
                                             <span id={styles.feelsLike}>

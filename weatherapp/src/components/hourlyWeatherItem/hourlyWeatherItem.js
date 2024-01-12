@@ -29,18 +29,16 @@ function HourlyWeatherItem({ weather }) {
 
     return (
         <div className={styles.hourItemContainer}>
-            <div className={styles.itemWrapper}>
-                {
-                    hourWeather.weather && (
-                        <>
-                            <div className={styles.hourlyHeader}>{time}</div>
-                            <img className={styles.hourlyIcon}
-                                src={`https://openweathermap.org/img/wn/${hourWeather.weather[0].icon}@2x.png`} />
-                            <div className={styles.hourlyHeader}>{Math.round(hourWeather.temp)}&deg;C</div>
-                        </>
-                    )
-                }
-            </div>
+            {
+                hourWeather.weather && (
+                    <div className={styles.itemWrapper}>
+                        <span className={styles.hourlyHeader}>{time}</span>
+                        <img className={styles.hourlyIcon}
+                            src={`https://openweathermap.org/img/wn/${hourWeather.weather[0].icon}@2x.png`} />
+                        <span className={styles.hourlyHeader}>{Math.round(hourWeather.temp)}&deg;C</span>
+                    </div>
+                )
+            }
         </div>
     );
 }
